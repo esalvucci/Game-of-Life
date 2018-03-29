@@ -43,11 +43,21 @@ public class WorldTest {
 
     @Test
     public void isDyingBecauseOfLoneliness() {
-        Assert.assertEquals(this.world.isDying(0, 3), true);
+        Assert.assertEquals(true, this.world.isDying(0, 3));
     }
 
     @Test
     public void isDyingBecauseOfOverPopulation() {
-        Assert.assertEquals(this.world.isDying(3, 1), true);
+        Assert.assertEquals(true, this.world.isDying(3, 1));
+    }
+
+    @Test
+    public void isSurviving() {
+        Assert.assertEquals(true, this.world.isLiving(2, 2));
+    }
+
+    @Test
+    public void becomesLive() {
+        Assert.assertEquals(true, this.world.isLiving(1, 1));
     }
 }

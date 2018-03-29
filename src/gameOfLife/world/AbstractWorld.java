@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public abstract class AbstractWorld implements World {
 
-    private static final int SIZE = 5;
+    private static final int SIZE = 100;
     private static final String SPACE = " ";
     private State[][] previousWorld = new State[SIZE][SIZE];
     private State[][] currentWorld = new State[SIZE][SIZE];
@@ -30,7 +30,7 @@ public abstract class AbstractWorld implements World {
             for (int j = 0; j < SIZE; j++) {
                 if (this.isDying(i, j)) {
                     this.currentWorld[i][j] = State.DEAD;
-                } else if (this.isSurviving(i, j)) {
+                } else if (this.isLiving(i, j)) {
                     this.currentWorld[i][j] = State.LIVE;
                 }
             }
@@ -62,14 +62,14 @@ public abstract class AbstractWorld implements World {
 
     public void printMatrix() {
         for (int i = 0; i < this.previousWorld.length; i++) {
-            for (int j = 0; j < this.previousWorld[i].length; j++) {
+            for (int j = 0; j < this.previousWorld.length; j++) {
                 System.out.print(this.previousWorld[i][j] + SPACE);
             }
             System.out.println();
         }
     }
 
-    abstract boolean isSurviving(int i, int j);
+    abstract boolean isLiving(int i, int j);
 
     abstract boolean isDying(int i, int j);
 
