@@ -1,7 +1,5 @@
 package gameOfLife.world;
 
-import static gameOfLife.State.*;
-import gameOfLife.State;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,16 +7,16 @@ import org.junit.Test;
 public class WorldTest {
 
     private AbstractWorld world;
-    private State[][] sampleWorld;
+    private boolean[][] sampleWorld;
 
     @Before
     public void init() {
-        this.sampleWorld = new State[][]{
-                {DEAD, DEAD, DEAD, LIVE, DEAD},
-                {DEAD, DEAD, DEAD, DEAD, DEAD},
-                {LIVE, LIVE, LIVE, DEAD, DEAD},
-                {LIVE, LIVE, LIVE, DEAD, DEAD},
-                {LIVE, DEAD, DEAD, DEAD, DEAD}
+        this.sampleWorld = new boolean[][]{
+                {false, false, false, true, false},
+                {false, false, false, false, false},
+                {true, true, true, false, false},
+                {true, true, true, false, false},
+                {true, false, false, false, false}
         };
 
         this.world = new WorldImpl(this.sampleWorld);

@@ -1,22 +1,22 @@
 package gameOfLife.world;
 
 import gameOfLife.Direction;
-import gameOfLife.State;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public abstract class AbstractWorld implements World {
 
-    private static final int SIZE = 100;
+    private static final int SIZE = 5;
     private static final String SPACE = " ";
-    private State[][] previousWorld = new State[SIZE][SIZE];
-    private State[][] currentWorld = new State[SIZE][SIZE];
+    private boolean[][] previousWorld = new boolean[SIZE][SIZE];
+    private boolean[][] currentWorld = new  boolean[SIZE][SIZE];
 
     public AbstractWorld() {
         this.initialize();
     }
 
-    public AbstractWorld(State[][] matrix) {
+    public AbstractWorld(boolean[][] matrix) {
         this.currentWorld = matrix;
         this.previousWorld = Arrays.copyOf(this.currentWorld, SIZE);
     }
@@ -29,21 +29,21 @@ public abstract class AbstractWorld implements World {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 if (this.isDying(i, j)) {
-                    this.currentWorld[i][j] = State.DEAD;
+                    this.currentWorld[i][j] = false;
                 } else if (this.isLiving(i, j)) {
-                    this.currentWorld[i][j] = State.LIVE;
+                    this.currentWorld[i][j] = true;
                 }
             }
         }
     }
 
     @Override
-    public State[][] getPreviousState() {
+    public boolean[][] getPreviousState() {
         return this.previousWorld;
     }
 
     @Override
-    public State[][] getCurrentState() {
+    public boolean[][] getCurrentState() {
         return this.currentWorld;
     }
 
@@ -52,7 +52,7 @@ public abstract class AbstractWorld implements World {
         int count = 0;
 
         for (Direction d : Direction.values()) {
-            if (this.previousWorld[(SIZE + i + d.getX()) % SIZE][(SIZE + j + d.getY()) % SIZE].equals(State.LIVE)) {
+            if (this.previousWorld[(SIZE + i + d.getX()) % SIZE][(SIZE + j + d.getY()) % SIZE]) {
                 count++;
             }
         }
@@ -77,7 +77,7 @@ public abstract class AbstractWorld implements World {
 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                this.currentWorld[i][j] = State.getRandomly();
+                this.currentWorld[i][j] = new Random().nextBoolean();
             }
         }
 

@@ -13,7 +13,7 @@ public class WorldImpl extends AbstractWorld {
         super();
     }
 
-    public WorldImpl(State[][] matrix) {
+    public WorldImpl(boolean[][] matrix) {
         super(matrix);
     }
 
@@ -30,22 +30,22 @@ public class WorldImpl extends AbstractWorld {
 
     private boolean isDyingBecauseOfOverPopulation(int i, int j) {
         return this.getNumberAliveNeighboursOf(i, j) >= OVER_POPULATION_LIMIT
-                && this.getPreviousState()[i][j].isAlive();
+                && this.getPreviousState()[i][j];
     }
 
     private boolean isDyingBecauseOfLoneliness(final int i, final int j) {
         return this.getNumberAliveNeighboursOf(i, j) <= LONELINESS_LIMIT
-                && this.getPreviousState()[i][j].isAlive();
+                && this.getPreviousState()[i][j];
     }
 
     private boolean isSurviving(final int i, final int j) {
         return (this.getNumberAliveNeighboursOf(i, j) == SURVIVING_MAX_NEIGHBOURS
                 || this.getNumberAliveNeighboursOf(i, j) == SURVIVING_MIN_NEIGHBOURS)
-                && this.getPreviousState()[i][j].isAlive();
+                && this.getPreviousState()[i][j];
     }
 
     private boolean becomesLive(int i, int j) {
-        return !this.getPreviousState()[i][j].isAlive()
+        return !this.getPreviousState()[i][j]
                 && this.getNumberAliveNeighboursOf(i, j) == SURVIVING_MAX_NEIGHBOURS;
     }
 }
