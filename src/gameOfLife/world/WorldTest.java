@@ -15,7 +15,6 @@ public class WorldTest {
     private static final int SURVIVING_MIN_NEIGHBOURS = 2;
     private static final int SURVIVING_MAX_NEIGHBOURS = 3;
 
-
     @Before
     public void init() {
         boolean[][] matrix = new boolean[][]{
@@ -31,7 +30,7 @@ public class WorldTest {
                                 .setMatrix(matrix)
                                 .build();
 
-        this.world = new WorldImpl();
+        this.world = new WorldImpl(this.sampleWorld);
 //        this.world.evolve();
 
     }

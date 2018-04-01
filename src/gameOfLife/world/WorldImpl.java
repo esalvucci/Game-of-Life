@@ -3,13 +3,9 @@ package gameOfLife.world;
 import gameOfLife.matrix.Matrix;
 import gameOfLife.matrix.MatrixImpl;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-
 public class WorldImpl implements World {
 
-    private static final int SIZE = 5;
+    private static final int SIZE = 5000;
     private static final String SPACE = " ";
     private static final int ADDICTIONAL_THREADS = 1;
     private Matrix previousWorld;
@@ -17,16 +13,16 @@ public class WorldImpl implements World {
     private Worker[] workers = new Worker[this.getThreadsNumber()];
     
     public WorldImpl() {
-        this.previousWorld = new MatrixImpl.Builder()
+        this.currentWorld = new MatrixImpl.Builder()
                                 .setSize(SIZE)
                                 .setMatrix()
                                 .build();
-        this.currentWorld = this.previousWorld;
+        this.previousWorld = this.currentWorld;
     }
 
     public WorldImpl(Matrix matrix) {
-        this.previousWorld = matrix;
-        this.currentWorld = this.previousWorld;
+        this.currentWorld = matrix;
+        this.previousWorld = this.currentWorld;
     }
 
     @Override
@@ -42,7 +38,7 @@ public class WorldImpl implements World {
 */
 
         try {
-            for (int i = 0; i < workers.length-1; i++) {
+            for (int i = 0; i <= workers.length - 1; i++) {
 //                Semaphore semaphore = new Semaphore(0, true);
 
                 workers[i] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld);
@@ -51,7 +47,7 @@ public class WorldImpl implements World {
             }
 /*
             Semaphore lastSemaphore = new Semaphore(0, true);*/
-            workers[workers.length - 1] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld);
+//            workers[workers.length - 1] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld);
 //            semaphores.add(lastSemaphore);
 
             for (Worker w : workers) {

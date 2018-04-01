@@ -38,23 +38,28 @@ public class Worker extends Thread {
 /*
         while(true) {
 */
+/*
             try {
 
-//                this.mutex.acquire();
+                this.mutex.acquire();
+*/
                 for (int i = this.startingRow; i < to; i++) {
                     for (int j = 0; j < this.currentWorld.getSize(); j++) {
+
                         if (this.isDying(i, j)) {
-                            this.currentWorld.updateValueIn(i, j, true);
+                            this.currentWorld.updateValueIn(i, j, false);
                         } else if (this.isLiving(i, j)) {
                             this.currentWorld.updateValueIn(i, j, true);
                         }
                     }
                 }
+/*
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-//                this.semaphore.release();
+                this.semaphore.release();
             }
+*/
 
     }
 
