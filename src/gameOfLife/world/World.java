@@ -1,10 +1,11 @@
 package gameOfLife.world;
 
+import gameOfLife.matrix.Matrix;
+
 public interface World {
 
-    void setNextState();
-    int getNumberAliveNeighboursOf(int i, int j);
-    boolean[][] getPreviousState();
-    boolean[][] getCurrentState();
+    void evolve();
+    Matrix getPreviousState();
+    Matrix getCurrentState();
 
 }

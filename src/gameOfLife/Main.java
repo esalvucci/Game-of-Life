@@ -1,24 +1,29 @@
 package gameOfLife;
 
-import gameOfLife.world.AbstractWorld;
+import gameOfLife.chronometer.Chronometer;
+import gameOfLife.world.World;
 import gameOfLife.world.WorldImpl;
+import gameOfLife.world.Worker;
 
 public class Main {
 
     private static final int TIMES = 100;
 
     public static void main(String... args) {
-        AbstractWorld world = new WorldImpl();
+        World world = new WorldImpl();
 
-        System.out.println("World initialized");
+        ((WorldImpl) world).printMatrix();
+
+        Chronometer chronometer = new Chronometer();
+        chronometer.start();
+        world.evolve();
+        chronometer.stop();
+
         System.out.println();
 
-        for (int i = 0; i < TIMES; i++) {
-            world.setNextState();
-            world.printMatrix();
+        ((WorldImpl) world).printMatrix();
 
-            System.out.println();
-        }
+        System.out.println("Matrix evolved in " + chronometer.getTime() + "ms");
 
     }
 }

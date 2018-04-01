@@ -1,51 +1,98 @@
 package gameOfLife.world;
 
-import gameOfLife.State;
+import gameOfLife.matrix.Matrix;
+import gameOfLife.matrix.MatrixImpl;
 
-public class WorldImpl extends AbstractWorld {
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.Semaphore;
 
-    private static final int OVER_POPULATION_LIMIT = 4;
-    private static final int LONELINESS_LIMIT = 1;
-    private static final int SURVIVING_MIN_NEIGHBOURS = 2;
-    private static final int SURVIVING_MAX_NEIGHBOURS = 3;
+public class WorldImpl implements World {
 
+    private static final int SIZE = 5;
+    private static final String SPACE = " ";
+    private static final int ADDICTIONAL_THREADS = 1;
+    private Matrix previousWorld;
+    private Matrix currentWorld;
+    private Worker[] workers = new Worker[this.getThreadsNumber()];
+    
     public WorldImpl() {
-        super();
+        this.previousWorld = new MatrixImpl.Builder()
+                                .setSize(SIZE)
+                                .setMatrix()
+                                .build();
+        this.currentWorld = this.previousWorld;
     }
 
-    public WorldImpl(boolean[][] matrix) {
-        super(matrix);
+    public WorldImpl(Matrix matrix) {
+        this.previousWorld = matrix;
+        this.currentWorld = this.previousWorld;
     }
 
     @Override
-    boolean isLiving(int i, int j) {
-        return this.isSurviving(i, j) || this.becomesLive(i, j);
+    public void evolve() {
+        this.previousWorld = this.currentWorld;
+
+        int startingRow = 0;
+        int rowsNumber = this.currentWorld.getSize() / workers.length;
+
+/*
+        List<Semaphore> semaphores = new LinkedList<>();
+        Semaphore mutex = new Semaphore(workers.length);
+*/
+
+        try {
+            for (int i = 0; i < workers.length-1; i++) {
+//                Semaphore semaphore = new Semaphore(0, true);
+
+                workers[i] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld);
+//                semaphores.add(semaphore);
+                startingRow = startingRow + rowsNumber;
+            }
+/*
+            Semaphore lastSemaphore = new Semaphore(0, true);*/
+            workers[workers.length - 1] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld);
+//            semaphores.add(lastSemaphore);
+
+            for (Worker w : workers) {
+                w.start();
+            }
+/*
+            for (Semaphore s : semaphores) {
+                s.acquire();
+            }
+
+            mutex.release();
+*/
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
-    boolean isDying(int i, int j) {
-        return this.isDyingBecauseOfOverPopulation(i, j)
-                || this.isDyingBecauseOfLoneliness(i, j);
+    public Matrix getPreviousState() {
+        return this.previousWorld;
     }
 
-    private boolean isDyingBecauseOfOverPopulation(int i, int j) {
-        return this.getNumberAliveNeighboursOf(i, j) >= OVER_POPULATION_LIMIT
-                && this.getPreviousState()[i][j];
+    @Override
+    public Matrix getCurrentState() {
+        return this.currentWorld;
     }
 
-    private boolean isDyingBecauseOfLoneliness(final int i, final int j) {
-        return this.getNumberAliveNeighboursOf(i, j) <= LONELINESS_LIMIT
-                && this.getPreviousState()[i][j];
+    public void printMatrix() {
+        for (int i = 0; i < this.previousWorld.getSize(); i++) {
+            for (int j = 0; j < this.previousWorld.getSize(); j++) {
+                System.out.print(this.previousWorld.get(i, j) + SPACE);
+            }
+            System.out.println();
+        }
     }
 
-    private boolean isSurviving(final int i, final int j) {
-        return (this.getNumberAliveNeighboursOf(i, j) == SURVIVING_MAX_NEIGHBOURS
-                || this.getNumberAliveNeighboursOf(i, j) == SURVIVING_MIN_NEIGHBOURS)
-                && this.getPreviousState()[i][j];
+    private int getThreadsNumber() {
+        return 1;
+        //        return Runtime.getRuntime().availableProcessors() + ADDICTIONAL_THREADS;
     }
 
-    private boolean becomesLive(int i, int j) {
-        return !this.getPreviousState()[i][j]
-                && this.getNumberAliveNeighboursOf(i, j) == SURVIVING_MAX_NEIGHBOURS;
-    }
 }
