@@ -1,8 +1,8 @@
-package gameOfLife;
+package gameOfLife.controller;
 
-import gameOfLife.chronometer.Chronometer;
-import gameOfLife.world.World;
-import gameOfLife.world.WorldImpl;
+import gameOfLife.model.chronometer.Chronometer;
+import gameOfLife.model.world.World;
+import gameOfLife.model.world.WorldImpl;
 
 public class Main {
 

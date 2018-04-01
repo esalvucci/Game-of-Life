@@ -1,4 +1,4 @@
-package gameOfLife;
+package gameOfLife.model;
 
 public enum Direction {
     NORTHWEST(-1, -1),

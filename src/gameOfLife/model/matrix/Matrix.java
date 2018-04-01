@@ -1,4 +1,4 @@
-package gameOfLife.matrix;
+package gameOfLife.model.matrix;
 
 public interface Matrix {
 

@@ -1,7 +1,7 @@
-package gameOfLife.world;
+package gameOfLife.model.world;
 
-import gameOfLife.matrix.Matrix;
-import gameOfLife.matrix.MatrixImpl;
+import gameOfLife.model.matrix.Matrix;
+import gameOfLife.model.matrix.MatrixImpl;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,6 +1,6 @@
-package gameOfLife.matrix;
+package gameOfLife.model.matrix;
 
-import gameOfLife.Direction;
+import gameOfLife.model.Direction;
 
 public class MatrixImpl implements Matrix {
 

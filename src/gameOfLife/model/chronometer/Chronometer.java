@@ -1,4 +1,4 @@
-package gameOfLife.chronometer;
+package gameOfLife.model.chronometer;
 
 public class Chronometer {
 

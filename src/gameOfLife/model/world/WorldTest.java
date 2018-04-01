@@ -1,7 +1,7 @@
-package gameOfLife.world;
+package gameOfLife.model.world;
 
-import gameOfLife.matrix.Matrix;
-import gameOfLife.matrix.MatrixImpl;
+import gameOfLife.model.matrix.Matrix;
+import gameOfLife.model.matrix.MatrixImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,6 +1,6 @@
-package gameOfLife.world;
+package gameOfLife.model.world;
 
-import gameOfLife.matrix.Matrix;
+import gameOfLife.model.matrix.Matrix;
 
 import java.util.concurrent.Semaphore;
 
