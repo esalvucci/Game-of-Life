@@ -3,9 +3,13 @@ package gameOfLife.world;
 import gameOfLife.matrix.Matrix;
 import gameOfLife.matrix.MatrixImpl;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+
 public class WorldImpl implements World {
 
-    private static final int SIZE = 5000;
+    private static final int SIZE = 10000;
     private static final String SPACE = " ";
     private static final int ADDICTIONAL_THREADS = 1;
     private Matrix previousWorld;
@@ -32,34 +36,32 @@ public class WorldImpl implements World {
         int startingRow = 0;
         int rowsNumber = this.currentWorld.getSize() / workers.length;
 
-/*
+
         List<Semaphore> semaphores = new LinkedList<>();
         Semaphore mutex = new Semaphore(workers.length);
-*/
 
         try {
-            for (int i = 0; i <= workers.length - 1; i++) {
-//                Semaphore semaphore = new Semaphore(0, true);
+            for (int i = 0; i < workers.length - 1; i++) {
+                Semaphore semaphore = new Semaphore(0, true);
 
-                workers[i] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld);
-//                semaphores.add(semaphore);
+                workers[i] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld, semaphore, mutex);
+                semaphores.add(semaphore);
                 startingRow = startingRow + rowsNumber;
             }
-/*
-            Semaphore lastSemaphore = new Semaphore(0, true);*/
-//            workers[workers.length - 1] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld);
-//            semaphores.add(lastSemaphore);
+
+            Semaphore lastSemaphore = new Semaphore(0, true);
+            workers[workers.length - 1] = new Worker(startingRow, rowsNumber, this.previousWorld, this.currentWorld, lastSemaphore, mutex);
+            semaphores.add(lastSemaphore);
 
             for (Worker w : workers) {
                 w.start();
             }
-/*
+
             for (Semaphore s : semaphores) {
                 s.acquire();
             }
 
             mutex.release();
-*/
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,8 +89,8 @@ public class WorldImpl implements World {
     }
 
     private int getThreadsNumber() {
-        return 1;
-        //        return Runtime.getRuntime().availableProcessors() + ADDICTIONAL_THREADS;
+//        return 1;
+        return Runtime.getRuntime().availableProcessors() + ADDICTIONAL_THREADS;
     }
 
 }

@@ -18,16 +18,16 @@ public class Worker extends Thread {
     private Semaphore semaphore;
     private Semaphore mutex;
 
-    public Worker(int startingRow, int rowsNumber, final Matrix previousWorld, Matrix currentWorld) {
+    public Worker(int startingRow, int rowsNumber, final Matrix previousWorld, Matrix currentWorld, Semaphore semaphore, Semaphore mutex) {
         super();
         this.startingRow = startingRow;
         this.rowsNumber = rowsNumber;
         this.previousWorld = previousWorld;
         this.currentWorld = currentWorld;
-/*
+
         this.semaphore = semaphore;
         this.mutex = mutex;
-*/
+
 
     }
 
@@ -35,14 +35,11 @@ public class Worker extends Thread {
     public void run() {
         int to = this.startingRow + this.rowsNumber;
 
-/*
         while(true) {
-*/
-/*
-            try {
 
+            try {
                 this.mutex.acquire();
-*/
+
                 for (int i = this.startingRow; i < to; i++) {
                     for (int j = 0; j < this.currentWorld.getSize(); j++) {
 
@@ -53,13 +50,13 @@ public class Worker extends Thread {
                         }
                     }
                 }
-/*
+
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 this.semaphore.release();
             }
-*/
+        }
 
     }
 
