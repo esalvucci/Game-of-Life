@@ -9,16 +9,15 @@ import java.util.concurrent.Semaphore;
 
 public class WorldImpl implements World {
 
-    private static final int SIZE = 5000;
     private static final String SPACE = " ";
     private static final int ADDICTIONAL_THREADS = 1;
     private Matrix previousWorld;
     private Matrix currentWorld;
-    private Worker[] workers = new Worker[this.getThreadsNumber()];
+    private final Worker[] workers = new Worker[this.getThreadsNumber()];
     
-    public WorldImpl() {
+    public WorldImpl(int size) {
         this.currentWorld = new MatrixImpl.Builder()
-                                .setSize(SIZE)
+                                .setSize(size)
                                 .setMatrix()
                                 .build();
         this.previousWorld = this.currentWorld;
@@ -35,7 +34,6 @@ public class WorldImpl implements World {
 
         int startingRow = 0;
         int rowsNumber = this.currentWorld.getSize() / workers.length;
-
 
         List<Semaphore> semaphores = new LinkedList<>();
         Semaphore mutex = new Semaphore(workers.length);
@@ -62,6 +60,7 @@ public class WorldImpl implements World {
             }
 
             mutex.release();
+
 
         } catch (Exception e) {
             e.printStackTrace();

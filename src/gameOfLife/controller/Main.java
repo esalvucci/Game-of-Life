@@ -7,10 +7,11 @@ import gameOfLife.model.world.WorldImpl;
 public class Main {
 
     public static void main(String... args) {
-        World world = new WorldImpl();
+        World world = new WorldImpl(10);
 
-//        ((WorldImpl) world).printMatrix();
-        while (true) {
+        ((WorldImpl) world).printMatrix();
+
+        for (int i = 0; i < 4 ; i++) {
             Chronometer chronometer = new Chronometer();
             chronometer.start();
             world.evolve();
@@ -18,7 +19,7 @@ public class Main {
 
             System.out.println();
 
-    //        ((WorldImpl) world).printMatrix();
+            ((WorldImpl) world).printMatrix();
 
             System.out.println("Matrix evolved in " + chronometer.getTime() + "ms");
         }

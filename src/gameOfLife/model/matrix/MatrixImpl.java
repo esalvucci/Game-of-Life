@@ -2,12 +2,21 @@ package gameOfLife.model.matrix;
 
 import gameOfLife.model.Direction;
 
+import java.awt.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class MatrixImpl implements Matrix {
 
     private boolean[][] matrix;
     private MatrixImpl(boolean[][] matrix) {
         this.matrix = matrix;
     }
+    private Map<Point, Boolean> map = new ConcurrentHashMap<>();
+    private Set<Point> trueValues = this.map.keySet();
 
     @Override
     public int getNumberAliveNeighboursOf(int i, int j) {
@@ -41,7 +50,15 @@ public class MatrixImpl implements Matrix {
     public void updateValueIn(int i, int j, boolean newValue) {
         if (this.get(i, j) != newValue) {
             this.matrix[i][j] = newValue;
+            if (newValue) {
+                this.map.put(new Point(i, j), true);
+            }
         }
+    }
+
+    @Override
+    public Collection<Point> getAliveCells() {
+        return this.trueValues;
     }
 
     public static class Builder {
