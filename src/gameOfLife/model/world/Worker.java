@@ -17,6 +17,7 @@ public class Worker extends Thread {
     private Matrix previousWorld;
     private Semaphore semaphore;
     private Semaphore mutex;
+    private boolean running = true;
 
     public Worker(int startingRow, int rowsNumber, final Matrix previousWorld, Matrix currentWorld, Semaphore semaphore, Semaphore mutex) {
         super();
@@ -33,7 +34,7 @@ public class Worker extends Thread {
     public void run() {
         int to = this.startingRow + this.rowsNumber;
 
-        while(true) {
+        while(running) {
 
             try {
                 this.mutex.acquire();
@@ -56,6 +57,10 @@ public class Worker extends Thread {
             }
         }
 
+    }
+
+    public void stopEvolution() {
+        this.running = false;
     }
 
     private boolean isLiving(int i, int j) {

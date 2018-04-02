@@ -1,12 +1,11 @@
 package gameOfLife.view;
 
-import gameOfLife.model.matrix.Matrix;
 import gameOfLife.model.world.World;
 import gameOfLife.model.world.WorldImpl;
 
 import javax.swing.*;
+
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,27 +18,19 @@ public class Grid extends JPanel {
     public Grid(int size) {
         fillCells = new HashSet<>();
         this.world = new WorldImpl(size);
-
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                world.evolve();
-                fillCells.addAll(world.getPreviousState().getAliveCells());
-                for (Point fillCell : fillCells) {
-                    int cellX = TEN + (fillCell.x * TEN);
-                    int cellY = TEN + (fillCell.y * TEN);
-                    g.setColor(Color.BLUE);
-                    g.fillRect(cellX, cellY, TEN, TEN);
-                }
-            }
-        });
-
-
+        fillCells.addAll(world.getPreviousState().getAliveCells());
+        for (Point fillCell : fillCells) {
+            int cellX = TEN + (fillCell.x * TEN);
+            int cellY = TEN + (fillCell.y * TEN);
+            g.setColor(Color.BLUE);
+            g.fillRect(cellX, cellY, TEN, TEN);
+        }
 
         g.setColor(Color.BLACK);
         g.drawRect(TEN, TEN, this.getMatrixSideSize(), this.getMatrixSideSize());
@@ -57,6 +48,10 @@ public class Grid extends JPanel {
     public void fillCell(int x, int y) {
         fillCells.add(new Point(x, y));
         repaint();
+    }
+
+    public int getAliveCellsNumber() {
+        return this.fillCells.size();
     }
 
     public int getMatrixSideSize() {
