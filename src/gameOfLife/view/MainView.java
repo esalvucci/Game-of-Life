@@ -1,10 +1,7 @@
 package gameOfLife.view;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 
 public class MainView {
 
@@ -15,6 +12,7 @@ public class MainView {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                    ex.printStackTrace();
                 }
 
                 JFrame window = new MatrixFrame();

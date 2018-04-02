@@ -26,10 +26,9 @@ public class MatrixFrame extends JFrame implements MouseMotionListener {
 
 		this.canvas = new Grid();
 		this.canvas.fillCell(0, 0);
-		this.canvas.fillCell(79, 0);
-		this.canvas.fillCell(0, 49);
-		this.canvas.fillCell(79, 49);
-		this.canvas.fillCell(39, 24);
+		this.canvas.fillCell(0, 10);
+		this.canvas.fillCell(10, 0);
+		this.canvas.fillCell(10, 10);
 
 		this.canvas.setPreferredSize(new Dimension(SIZE + 400, SIZE + 50));
 //		this.set = set;
