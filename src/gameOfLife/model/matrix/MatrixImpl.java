@@ -5,7 +5,6 @@ import gameOfLife.model.Direction;
 public class MatrixImpl implements Matrix {
 
     private boolean[][] matrix;
-
     private MatrixImpl(boolean[][] matrix) {
         this.matrix = matrix;
     }

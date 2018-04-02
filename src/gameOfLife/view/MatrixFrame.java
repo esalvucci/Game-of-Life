@@ -1,5 +1,8 @@
 package gameOfLife.view;
 
+import gameOfLife.model.matrix.Matrix;
+import gameOfLife.model.matrix.MatrixImpl;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -15,6 +18,7 @@ import java.awt.image.BufferedImage;
 public class MatrixFrame extends JFrame implements MouseMotionListener {
 
 	private static final int SIZE = 500;
+	private static final int MATRIX_SIZE = 100;
 //	private MandelbrotSetImage set;
 	private Grid canvas;
 	private JScrollPane scrollPane;
@@ -24,13 +28,13 @@ public class MatrixFrame extends JFrame implements MouseMotionListener {
 		setSize(SIZE, SIZE);
 		this.setResizable(false);
 
-		this.canvas = new Grid();
-		this.canvas.fillCell(0, 0);
-		this.canvas.fillCell(0, 10);
-		this.canvas.fillCell(10, 0);
-		this.canvas.fillCell(10, 10);
+		Matrix matrix = new MatrixImpl.Builder()
+                            .setSize(MATRIX_SIZE)
+                            .setMatrix()
+                            .build();
+		this.canvas = new Grid(matrix);
 
-		this.canvas.setPreferredSize(new Dimension(SIZE + 400, SIZE + 50));
+		this.canvas.setPreferredSize(new Dimension(SIZE + this.canvas.getMatrixSideSize(), SIZE + this.canvas.getMatrixSideSize()));
 //		this.set = set;
 	    scrollPane = new JScrollPane(canvas);
 

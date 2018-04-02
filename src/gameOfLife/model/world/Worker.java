@@ -27,8 +27,6 @@ public class Worker extends Thread {
 
         this.semaphore = semaphore;
         this.mutex = mutex;
-
-
     }
 
     @Override

@@ -1,5 +1,7 @@
 package gameOfLife.model.matrix;
 
+import java.util.Collection;
+
 public interface Matrix {
 
     int getNumberAliveNeighboursOf(int i, int j);

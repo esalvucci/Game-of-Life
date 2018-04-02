@@ -9,7 +9,7 @@ import java.util.concurrent.Semaphore;
 
 public class WorldImpl implements World {
 
-    private static final int SIZE = 10000;
+    private static final int SIZE = 5000;
     private static final String SPACE = " ";
     private static final int ADDICTIONAL_THREADS = 1;
     private Matrix previousWorld;

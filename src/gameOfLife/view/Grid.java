@@ -1,19 +1,28 @@
 package gameOfLife.view;
 
+import gameOfLife.model.matrix.Matrix;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Grid extends JPanel {
 
     private static final int TEN = 10;
-    private static final int MATRIX_WIDTH = 10 * TEN + TEN;
-    private static final int MATRIX_HEIGHT = 10 * TEN + TEN;
-    private List<Point> fillCells;
+    private Matrix matrix;
+    private Set<Point> fillCells;
 
-    public Grid() {
-        fillCells = new ArrayList<>(25);
+    public Grid(Matrix matrix) {
+        fillCells = new HashSet<>();
+        this.matrix = matrix;
+        for (int i = 0; i < matrix.getSize(); i++) {
+            for (int j = 0; j < matrix.getSize(); j++) {
+                if (matrix.get(i, j)) {
+                    fillCells.add(new Point(i, j));
+                }
+            }
+        }
     }
 
     @Override
@@ -26,19 +35,23 @@ public class Grid extends JPanel {
             g.fillRect(cellX, cellY, TEN, TEN);
         }
         g.setColor(Color.BLACK);
-        g.drawRect(TEN, TEN, MATRIX_WIDTH, MATRIX_HEIGHT);
+        g.drawRect(TEN, TEN, this.getMatrixSideSize(), this.getMatrixSideSize());
 
-        for (int i = TEN; i <= MATRIX_WIDTH; i += TEN) {
-            g.drawLine(i, TEN, i, MATRIX_HEIGHT + TEN);
+        for (int i = TEN; i <= this.getMatrixSideSize(); i += TEN) {
+            g.drawLine(i, TEN, i, this.getMatrixSideSize() + TEN);
         }
 
-        for (int i = TEN; i <= MATRIX_HEIGHT; i += TEN) {
-            g.drawLine(TEN, i, MATRIX_WIDTH + TEN, i);
+        for (int i = TEN; i <= this.getMatrixSideSize(); i += TEN) {
+            g.drawLine(TEN, i, this.getMatrixSideSize() + TEN, i);
         }
     }
 
     public void fillCell(int x, int y) {
         fillCells.add(new Point(x, y));
         repaint();
+    }
+
+    public int getMatrixSideSize() {
+        return this.matrix.getSize() * TEN + TEN;
     }
 }
