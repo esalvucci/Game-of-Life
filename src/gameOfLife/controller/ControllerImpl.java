@@ -108,7 +108,6 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
      */
     @Override
     public void endMatrixUpdate() {
-        this.getPreviousState().clearAliveCells();
         for (Semaphore semaphore : this.mutexes) {
             semaphore.release();
         }

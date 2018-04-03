@@ -41,15 +41,4 @@ public interface Matrix {
      */
     void updateValueIn(int i, int j, boolean newValue);
 
-    /**
-     * Getter for all the alive cells represented as a Collection of points. Each point has a x and a y which are the
-     * coordinates of the cell in the matrix.
-     * @return the alive cells in the matrix.
-     */
-    Collection<Point> getAliveCells();
-
-    /**
-     * Clears the Collection storing the alive cells to free heap memory.
-     */
-    void clearAliveCells();
 }

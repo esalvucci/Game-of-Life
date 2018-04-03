@@ -47,7 +47,8 @@ public class MatrixFrame extends JFrame implements MouseMotionListener {
 
     public void updateView() {
         scrollPane.repaint();
-        this.aliveCells.setText(this.canvas.getAliveCellsNumber() + ALIVE_CELLS);
+
+        this.aliveCells.setText(this.canvas.getCounter() + ALIVE_CELLS);
 		this.getController().endMatrixUpdate();
 	}
 

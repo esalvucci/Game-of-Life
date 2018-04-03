@@ -13,10 +13,9 @@ public class Grid extends JPanel {
 
     private static final int TEN = 10;
     private Controller controller;
-    private Set<Point> fillCells;
+    private long counter;
 
     public Grid(Controller controller) {
-        fillCells = new HashSet<>();
         this.controller = controller;
     }
 
@@ -24,14 +23,18 @@ public class Grid extends JPanel {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
-        fillCells.clear();
-        fillCells.addAll(controller.getPreviousState().getAliveCells());
+        counter = 0;
 
-        for (Point fillCell : fillCells) {
-            int cellX = TEN + (fillCell.x * TEN);
-            int cellY = TEN + (fillCell.y * TEN);
-            graphics.setColor(Color.BLUE);
-            graphics.fillRect(cellX, cellY, TEN, TEN);
+        for (int i = 0; i < this.controller.getPreviousState().getSize(); i++) {
+            for (int j = 0; j < this.controller.getPreviousState().getSize(); j++) {
+                if (this.controller.getPreviousState().get(i, j)) {
+                    counter++;
+                    int cellX = TEN + (i * TEN);
+                    int cellY = TEN + (j * TEN);
+                    graphics.setColor(Color.BLUE);
+                    graphics.fillRect(cellX, cellY, TEN, TEN);
+                }
+            }
         }
 
         graphics.setColor(Color.BLACK);
@@ -47,13 +50,8 @@ public class Grid extends JPanel {
 
     }
 
-    public void fillCell(int x, int y) {
-        fillCells.add(new Point(x, y));
-        repaint();
-    }
-
-    public int getAliveCellsNumber() {
-        return this.fillCells.size();
+    public long getCounter() {
+        return this.counter;
     }
 
     public int getMatrixSideSize() {

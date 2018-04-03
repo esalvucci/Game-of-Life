@@ -11,8 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MatrixImpl implements Matrix {
 
     private boolean[][] matrix;
-    private Map<Point, Boolean> map = new ConcurrentHashMap<>();
-    private Set<Point> trueValues = this.map.keySet();
 
     private MatrixImpl(boolean[][] matrix) {
         this.matrix = matrix;
@@ -65,31 +63,9 @@ public class MatrixImpl implements Matrix {
     public void updateValueIn(int i, int j, boolean newValue) {
         if (this.get(i, j) != newValue) {
             this.matrix[i][j] = newValue;
-            if (newValue) {
-                this.map.put(new Point(i, j), true);
-            }
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Collection<Point> getAliveCells() {
-        return this.trueValues;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void clearAliveCells() {
-        this.trueValues.clear();
-    }
-
-    /**
-     * Builder of the class according to Builder Design Pattern.
-     */
     public static class Builder {
 
         private static final double FIFTY_PERCENT = 0.5;
