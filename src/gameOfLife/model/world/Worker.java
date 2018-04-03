@@ -51,6 +51,7 @@ public class Worker extends Thread {
                         }
                     }
                 }
+                Thread.sleep(500);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -59,6 +60,7 @@ public class Worker extends Thread {
 
                 this.semaphore.release();
             }
+
         }
 
     }

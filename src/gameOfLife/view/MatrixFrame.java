@@ -16,11 +16,15 @@ public class MatrixFrame extends JFrame implements MouseMotionListener {
 	private Grid canvas;
 	private JScrollPane scrollPane;
 	private Controller controller;
+	private final JPanel info = new JPanel();
+    private final JButton start = new JButton(START);
+    private final JButton stop = new JButton(STOP);
+    private final JLabel aliveCells = new JLabel();
 
-	private MatrixFrame(Controller controller) {
+    private MatrixFrame(Controller controller) {
 		super("Game of Life");
         this.setSize(SIZE, SIZE);
-		this.setResizable(false);
+//		this.setResizable(false);
 
 		this.controller = controller;
 
@@ -46,7 +50,8 @@ public class MatrixFrame extends JFrame implements MouseMotionListener {
     }
 
     public void updateView() {
-		scrollPane.repaint();
+        scrollPane.repaint();
+        this.aliveCells.setText(this.canvas.getAliveCellsNumber() + ALIVE_CELLS);
 		this.getController().endMatrixUpdate();
 	}
 
@@ -55,29 +60,23 @@ public class MatrixFrame extends JFrame implements MouseMotionListener {
     }
 
 	private void setInfoPanel() {
-		JPanel info = new JPanel();
-		JButton start = new JButton(START);
-        JButton stop = new JButton(STOP);
 
-		start.addActionListener(e -> {
+		this.start.addActionListener(e -> {
             start.setEnabled(false);
             stop.setEnabled(true);
             getController().startEvolution();
 
         });
 
-		stop.addActionListener(e -> {
+		this.stop.addActionListener(e -> {
             stop.setEnabled(false);
-            start.setEnabled(true);
+            start.setEnabled(false);
             getController().stopEvolution();
         });
 
-		JLabel aliveCells = new JLabel();
-		aliveCells.setText(this.canvas.getAliveCellsNumber() + ALIVE_CELLS);
-
-		info.add(start);
-		info.add(stop);
-		info.add(aliveCells);
+		info.add(this.start);
+		info.add(this.stop);
+		info.add(this.aliveCells);
 		this.add(info, BorderLayout.NORTH);
 	}
 

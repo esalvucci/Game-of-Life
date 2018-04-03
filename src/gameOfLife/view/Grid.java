@@ -21,27 +21,28 @@ public class Grid extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
 
         fillCells.clear();
         fillCells.addAll(controller.getPreviousState().getAliveCells());
+
         for (Point fillCell : fillCells) {
             int cellX = TEN + (fillCell.x * TEN);
             int cellY = TEN + (fillCell.y * TEN);
-            g.setColor(Color.BLUE);
-            g.fillRect(cellX, cellY, TEN, TEN);
+            graphics.setColor(Color.BLUE);
+            graphics.fillRect(cellX, cellY, TEN, TEN);
         }
 
-        g.setColor(Color.BLACK);
-        g.drawRect(TEN, TEN, this.getMatrixSideSize(), this.getMatrixSideSize());
+        graphics.setColor(Color.BLACK);
+        graphics.drawRect(TEN, TEN, this.getMatrixSideSize(), this.getMatrixSideSize());
 
         for (int i = TEN; i <= this.getMatrixSideSize(); i += TEN) {
-            g.drawLine(i, TEN, i, this.getMatrixSideSize() + TEN);
+            graphics.drawLine(i, TEN, i, this.getMatrixSideSize() + TEN);
         }
 
         for (int i = TEN; i <= this.getMatrixSideSize(); i += TEN) {
-            g.drawLine(TEN, i, this.getMatrixSideSize() + TEN, i);
+            graphics.drawLine(TEN, i, this.getMatrixSideSize() + TEN, i);
         }
 
     }

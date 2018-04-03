@@ -4,7 +4,6 @@ import gameOfLife.model.Direction;
 
 import java.awt.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -88,8 +87,8 @@ public class MatrixImpl implements Matrix {
             } else {
                 this.matrix = new boolean[this.size][this.size];
 
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < this.size; j++) {
+                for (int i = 0; i <= this.size - 1; i++) {
+                    for (int j = 0; j <= this.size - 1; j++) {
                         this.matrix[i][j] = this.getRandomBoolean();
                     }
                 }

@@ -8,12 +8,14 @@ import javax.swing.*;
 
 public class MainView {
 
+    private static final int SIZE = 100;
+
     public static void main(String[] a) {
 
         SwingUtilities.invokeLater(new Runnable() {
                                        public void run() {
 
-                                           Controller controller = new ControllerImpl(5000);
+                                           Controller controller = new ControllerImpl(SIZE);
                                            controller.createWorkers();
                                            MatrixFrame window = new MatrixFrame.Builder()
                                                                 .setController(controller)
