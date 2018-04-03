@@ -92,7 +92,6 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
 
     @Override
     protected Void doInBackground() {
-        log(!this.isStopped() + " ");
 
         while(!stopped) {
             try {
@@ -100,15 +99,11 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
                     semaphore.acquire();
                 }
 
-                log(" acquired " + String.valueOf(System.currentTimeMillis()));
-
                 this.process(new ArrayList<>());
             } catch (InterruptedException e) {
                 for (Semaphore mutex : this.mutexes) {
                     mutex.release();
                 }
-
-                log(" released in catch " + String.valueOf(System.currentTimeMillis()));
 
                 e.printStackTrace();
             }
@@ -125,8 +120,6 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
     public void endMatrixUpdate() {
 
         this.getPreviousState().clearAliveCells();
-
-        log(" released in updated " + String.valueOf(System.currentTimeMillis()));
 
         for (Semaphore semaphore : this.mutexes) {
             semaphore.release();
@@ -166,7 +159,4 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
         return Runtime.getRuntime().availableProcessors() + ADDICTIONAL_THREADS;
     }
 
-    private void log(String msg) {
-        System.out.println("[PRESENTER_WORKER]: " + Thread.currentThread().getName() + ", " + msg);
-    }
 }

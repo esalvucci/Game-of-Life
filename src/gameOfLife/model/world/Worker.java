@@ -39,8 +39,6 @@ public class Worker extends Thread {
             try {
                 this.mutex.acquire();
 
-                log(" acquired " + String.valueOf(System.currentTimeMillis()), Thread.currentThread().getId());
-
                 for (int i = this.startingRow; i < to; i++) {
                     for (int j = 0; j < this.currentWorld.getSize(); j++) {
 
@@ -51,13 +49,10 @@ public class Worker extends Thread {
                         }
                     }
                 }
-                Thread.sleep(500);
 
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                log(" released " + String.valueOf(System.currentTimeMillis()), Thread.currentThread().getId());
-
                 this.semaphore.release();
             }
 
@@ -97,10 +92,6 @@ public class Worker extends Thread {
     private boolean becomesLive(int i, int j) {
         return !this.previousWorld.get(i, j)
                 && this.previousWorld.getNumberAliveNeighboursOf(i, j) == SURVIVING_MAX_NEIGHBOURS;
-    }
-
-    private void log(String msg, long i) {
-        System.out.println("[WORKER_" + i + "]: " + Thread.currentThread().getName()+ ", " + msg);
     }
 
 }
