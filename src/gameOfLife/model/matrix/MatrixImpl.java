@@ -11,12 +11,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MatrixImpl implements Matrix {
 
     private boolean[][] matrix;
-    private MatrixImpl(boolean[][] matrix) {
-        this.matrix = matrix;
-    }
     private Map<Point, Boolean> map = new ConcurrentHashMap<>();
     private Set<Point> trueValues = this.map.keySet();
 
+    private MatrixImpl(boolean[][] matrix) {
+        this.matrix = matrix;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberAliveNeighboursOf(int i, int j) {
         int count = 0;
@@ -30,21 +34,33 @@ public class MatrixImpl implements Matrix {
         return count;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean get(int i, int j) {
         return this.matrix[i][j];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean[][] get() {
         return this.matrix;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getSize() {
         return this.matrix.length;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateValueIn(int i, int j, boolean newValue) {
         if (this.get(i, j) != newValue) {
@@ -55,31 +71,52 @@ public class MatrixImpl implements Matrix {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Point> getAliveCells() {
         return this.trueValues;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clearAliveCells() {
         this.trueValues.clear();
     }
 
+    /**
+     * Builder of the class according to Builder Design Pattern.
+     */
     public static class Builder {
 
         private static final double FIFTY_PERCENT = 0.5;
         private int size;
         private boolean[][] matrix;
 
+        /**
+         * Default constructor of the builder.
+         */
         public Builder() {
 
         }
 
+        /**
+         * Setter for the size of the matrix.
+         * @param size of the matrix.
+         * @return the builder itself.
+         */
         public Builder setSize(int size) {
             this.size = size;
             return this;
         }
 
+        /**
+         * Setter for the matrix. It fill each cell with a random boolean value.
+         * @return the builder itself.
+         */
         public Builder setMatrix() {
 
             if (this.size == 0) {
@@ -97,11 +134,10 @@ public class MatrixImpl implements Matrix {
             return this;
         }
 
-        public Builder setMatrix(boolean[][] matrix) {
-            this.matrix = matrix;
-            return this;
-        }
-
+        /**
+         * Method that create a MatrixImpl if the matrix has been setted before in the builder.
+         * @return the matrix implementation.
+         */
         public MatrixImpl build() {
             if (this.matrix != null) {
                 return new MatrixImpl(this.matrix);
@@ -111,7 +147,6 @@ public class MatrixImpl implements Matrix {
         }
 
         private boolean getRandomBoolean() {
-            // return new Random().nextBoolean();
             return Math.random() < FIFTY_PERCENT;
         }
 

@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class MainView {
 
-    private static final int SIZE = 100;
+    private static final int SIZE = 3000;
 
     public static void main(String[] a) {
 

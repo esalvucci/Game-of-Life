@@ -17,24 +17,26 @@ public class Worker extends Thread {
     private Matrix previousWorld;
     private Semaphore semaphore;
     private Semaphore mutex;
-    private boolean stopped = false;
+    private boolean running = true;
 
-    public Worker(int startingRow, int rowsNumber, final Matrix previousWorld, Matrix currentWorld, Semaphore semaphore, Semaphore mutex) {
+    private Worker(int startingRow, int rowsNumber, final Matrix previousWorld, Matrix currentWorld, Semaphore semaphore, Semaphore mutex) {
         super();
         this.startingRow = startingRow;
         this.rowsNumber = rowsNumber;
         this.previousWorld = previousWorld;
         this.currentWorld = currentWorld;
-
         this.semaphore = semaphore;
         this.mutex = mutex;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         final int to = this.startingRow + this.rowsNumber;
 
-        while(!stopped) {
+        while(this.isRunning()) {
 
             try {
                 this.mutex.acquire();
@@ -49,19 +51,27 @@ public class Worker extends Thread {
                         }
                     }
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 this.semaphore.release();
             }
-
         }
-
     }
 
+    /**
+     * Stops the evolution of the matrix changing the running flag.
+     */
     public void stopEvolution() {
-        this.stopped = true;
+        this.changeRunningStatus();
+    }
+
+    private void changeRunningStatus() {
+        this.running = !this.isRunning();
+    }
+
+    private boolean isRunning() {
+        return this.running;
     }
 
     private boolean isLiving(int i, int j) {
@@ -92,6 +102,60 @@ public class Worker extends Thread {
     private boolean becomesLive(int i, int j) {
         return !this.previousWorld.get(i, j)
                 && this.previousWorld.getNumberAliveNeighboursOf(i, j) == SURVIVING_MAX_NEIGHBOURS;
+    }
+
+    public static class Builder {
+
+        private int startingRow;
+        private int rowsNumber;
+        private Matrix previousState;
+        private Matrix currentState;
+        private Semaphore semaphore;
+        private Semaphore mutex;
+
+        public Builder() {
+
+        }
+
+        public Builder setStartingRow(int startingRow) {
+            this.startingRow = startingRow;
+            return this;
+        }
+
+        public Builder setRowsNumber(int rowsNumber) {
+            this.rowsNumber = rowsNumber;
+            return this;
+        }
+
+        public Builder setPreviousState(Matrix previousState) {
+            this.previousState = previousState;
+            return this;
+        }
+
+        public Builder setCurrentState(Matrix currentState) {
+            this.currentState = currentState;
+            return this;
+        }
+
+        public Builder setSemaphore(Semaphore semaphore) {
+            this.semaphore = semaphore;
+            return this;
+        }
+
+        public Builder setMutex(Semaphore mutex) {
+            this.mutex = mutex;
+            return this;
+        }
+
+        public Worker build() {
+            if (this.startingRow != 0 || this.rowsNumber != 0 || this.previousState != null
+                    || this.currentState != null || this.semaphore != null || this.mutex != null) {
+                return new Worker(this.startingRow, this.rowsNumber,
+                        this.previousState, this.currentState, this.semaphore,  this.mutex);
+            } else {
+                throw new IllegalStateException();
+            }
+        }
     }
 
 }
