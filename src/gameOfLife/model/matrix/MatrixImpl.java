@@ -61,6 +61,11 @@ public class MatrixImpl implements Matrix {
         return this.trueValues;
     }
 
+    @Override
+    public void clearAliveCells() {
+        this.trueValues.clear();
+    }
+
     public static class Builder {
 
         private static final double FIFTY_PERCENT = 0.5;

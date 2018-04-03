@@ -17,7 +17,7 @@ public class Worker extends Thread {
     private Matrix previousWorld;
     private Semaphore semaphore;
     private Semaphore mutex;
-    private boolean running = true;
+    private boolean stopped = false;
 
     public Worker(int startingRow, int rowsNumber, final Matrix previousWorld, Matrix currentWorld, Semaphore semaphore, Semaphore mutex) {
         super();
@@ -32,12 +32,14 @@ public class Worker extends Thread {
 
     @Override
     public void run() {
-        int to = this.startingRow + this.rowsNumber;
+        final int to = this.startingRow + this.rowsNumber;
 
-        while(running) {
+        while(!stopped) {
 
             try {
                 this.mutex.acquire();
+
+                log(" acquired " + String.valueOf(System.currentTimeMillis()), Thread.currentThread().getId());
 
                 for (int i = this.startingRow; i < to; i++) {
                     for (int j = 0; j < this.currentWorld.getSize(); j++) {
@@ -53,6 +55,8 @@ public class Worker extends Thread {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
+                log(" released " + String.valueOf(System.currentTimeMillis()), Thread.currentThread().getId());
+
                 this.semaphore.release();
             }
         }
@@ -60,7 +64,7 @@ public class Worker extends Thread {
     }
 
     public void stopEvolution() {
-        this.running = false;
+        this.stopped = true;
     }
 
     private boolean isLiving(int i, int j) {
@@ -92,4 +96,9 @@ public class Worker extends Thread {
         return !this.previousWorld.get(i, j)
                 && this.previousWorld.getNumberAliveNeighboursOf(i, j) == SURVIVING_MAX_NEIGHBOURS;
     }
+
+    private void log(String msg, long i) {
+        System.out.println("[WORKER_" + i + "]: " + Thread.currentThread().getName()+ ", " + msg);
+    }
+
 }

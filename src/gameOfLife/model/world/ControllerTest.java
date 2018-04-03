@@ -1,14 +1,15 @@
 package gameOfLife.model.world;
 
+import gameOfLife.controller.ControllerImpl;
 import gameOfLife.model.matrix.Matrix;
 import gameOfLife.model.matrix.MatrixImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class WorldTest {
+public class ControllerTest {
 
-    private WorldImpl world;
+    private ControllerImpl world;
     private Matrix sampleWorld;
     private static final int OVER_POPULATION_LIMIT = 4;
     private static final int LONELINESS_LIMIT = 1;
@@ -30,7 +31,7 @@ public class WorldTest {
                                 .setMatrix(matrix)
                                 .build();
 
-        this.world = new WorldImpl(this.sampleWorld);
+        this.world = new ControllerImpl(this.sampleWorld);
 //        this.world.evolve();
 
     }

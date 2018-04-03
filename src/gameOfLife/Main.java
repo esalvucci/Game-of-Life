@@ -1,25 +1,25 @@
-package gameOfLife.controller;
+package gameOfLife;
 
+import gameOfLife.controller.Controller;
+import gameOfLife.controller.ControllerImpl;
 import gameOfLife.model.chronometer.Chronometer;
-import gameOfLife.model.world.World;
-import gameOfLife.model.world.WorldImpl;
 
 public class Main {
 
     public static void main(String... args) {
-        World world = new WorldImpl(10);
+        Controller controller = new ControllerImpl(10);
 
-        ((WorldImpl) world).printMatrix();
+        ((ControllerImpl) controller).printMatrix();
 
         for (int i = 0; i < 4 ; i++) {
             Chronometer chronometer = new Chronometer();
             chronometer.start();
-            world.evolve();
+//            controller.evolve();
             chronometer.stop();
 
             System.out.println();
 
-            ((WorldImpl) world).printMatrix();
+            ((ControllerImpl) controller).printMatrix();
 
             System.out.println("Matrix evolved in " + chronometer.getTime() + "ms");
         }

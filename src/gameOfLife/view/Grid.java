@@ -1,7 +1,7 @@
 package gameOfLife.view;
 
-import gameOfLife.model.world.World;
-import gameOfLife.model.world.WorldImpl;
+import gameOfLife.controller.Controller;
+import gameOfLife.controller.ControllerImpl;
 
 import javax.swing.*;
 
@@ -12,19 +12,20 @@ import java.util.Set;
 public class Grid extends JPanel {
 
     private static final int TEN = 10;
-    private World world;
+    private Controller controller;
     private Set<Point> fillCells;
 
-    public Grid(int size) {
+    public Grid(Controller controller) {
         fillCells = new HashSet<>();
-        this.world = new WorldImpl(size);
+        this.controller = controller;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        fillCells.addAll(world.getPreviousState().getAliveCells());
+        fillCells.clear();
+        fillCells.addAll(controller.getPreviousState().getAliveCells());
         for (Point fillCell : fillCells) {
             int cellX = TEN + (fillCell.x * TEN);
             int cellY = TEN + (fillCell.y * TEN);
@@ -55,6 +56,6 @@ public class Grid extends JPanel {
     }
 
     public int getMatrixSideSize() {
-        return this.world.getPreviousState().getSize() * TEN + TEN;
+        return this.controller.getPreviousState().getSize() * TEN + TEN;
     }
 }

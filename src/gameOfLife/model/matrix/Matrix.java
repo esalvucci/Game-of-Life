@@ -11,4 +11,5 @@ public interface Matrix {
     int getSize();
     void updateValueIn(int i, int j, boolean newValue);
     Collection<Point> getAliveCells();
+    void clearAliveCells();
 }
