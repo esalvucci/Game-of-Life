@@ -1,10 +1,12 @@
 package gameOfLife.controller;
 
+import gameOfLife.model.chronometer.Chronometer;
 import gameOfLife.model.matrix.Matrix;
 import gameOfLife.model.matrix.MatrixImpl;
 import gameOfLife.model.world.Worker;
 import gameOfLife.view.MatrixFrame;
 
+import javax.print.attribute.standard.Chromaticity;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
     private Matrix currentWorld;
     private boolean running = true;
     private MatrixFrame frame;
+    private Chronometer chronometer = new Chronometer();
 
     /**
      * Constructor which get as parameter the size of the matrix that is going to initialize.
@@ -81,6 +84,8 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
 
         while(this.isRunning()) {
             try {
+                this.chronometer.start();
+
                 for (Semaphore semaphore : this.semaphores) {
                     semaphore.acquire();
                 }
@@ -111,6 +116,9 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
         for (Semaphore semaphore : this.mutexes) {
             semaphore.release();
         }
+        this.chronometer.stop();
+        System.out.println("Time elapsed: " + this.chronometer.getTime() + "ms");
+
     }
 
     /**
