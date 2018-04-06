@@ -55,6 +55,6 @@ public class Grid extends JPanel {
     }
 
     public int getMatrixSideSize() {
-        return this.controller.getPreviousState().getSize() * TEN + TEN;
+        return this.controller.getPreviousState().getSize() * TEN;
     }
 }
