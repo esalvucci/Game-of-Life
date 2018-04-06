@@ -68,7 +68,7 @@ public class MatrixImpl implements Matrix {
 
     public static class Builder {
 
-        private static final double FIFTY_PERCENT = 0.5;
+        private static final double FIFTY_PERCENT = 0.1;
         private int size;
         private boolean[][] matrix;
 
@@ -107,6 +107,15 @@ public class MatrixImpl implements Matrix {
                 }
             }
             
+            return this;
+        }
+
+        public Builder setEmptyMatrix() {
+            if (this.size != 0) {
+                this.matrix = new boolean[this.size][this.size];
+            } else {
+                throw new IllegalStateException();
+            }
             return this;
         }
 

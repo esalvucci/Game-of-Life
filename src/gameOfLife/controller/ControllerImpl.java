@@ -36,7 +36,10 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
                                 .setSize(size)
                                 .setMatrix()
                                 .build();
-        this.previousWorld = this.currentWorld;
+        this.previousWorld = new MatrixImpl.Builder()
+                                .setSize(size)
+                                .setEmptyMatrix()
+                                .build();
     }
 
     /**
@@ -44,7 +47,6 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
      */
     @Override
     public void createWorkers() {
-        this.previousWorld = this.currentWorld;
 
         int startingRow = 0;
         int rowsNumber = this.currentWorld.getSize() / this.workers.length;
@@ -116,6 +118,14 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
         for (Semaphore semaphore : this.mutexes) {
             semaphore.release();
         }
+
+        for (int i = 0; i < this.currentWorld.getSize(); i++) {
+            for (int j = 0; j < this.currentWorld.getSize(); j++) {
+                boolean newValue = this.currentWorld.get(i, j);
+                this.previousWorld.updateValueIn(i, j, newValue);
+            }
+        }
+
         this.chronometer.stop();
         System.out.println("Time elapsed: " + this.chronometer.getTime() + "ms");
 
