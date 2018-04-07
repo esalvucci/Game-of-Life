@@ -38,9 +38,16 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
                                 .setMatrix()
                                 .build();
         this.previousWorld = new MatrixImpl.Builder()
-                                .setSize(size)
-                                .setEmptyMatrix()
-                                .build();
+                .setSize(size)
+                .setEmptyMatrix()
+                .build();
+
+        for (int i = 0; i < this.currentWorld.getSize(); i++) {
+            for (int j = 0; j < this.currentWorld.getSize(); j++) {
+                boolean newValue = this.currentWorld.get(i, j);
+                this.previousWorld.updateValueIn(i, j, newValue);
+            }
+        }
     }
 
     /**
@@ -52,7 +59,7 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
         int startingRow = 0;
         int rowsNumber = this.currentWorld.getSize() / this.workers.length;
 
-            for (int i = 0; i < this.workers.length; i++) {
+            for (int i = 0; i < this.workers.length-1; i++) {
                 Semaphore semaphore = new Semaphore(0, true);
                 Semaphore mutex = new Semaphore(1, true);
 
@@ -68,6 +75,21 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
                 this.mutexes.add(mutex);
                 startingRow = startingRow + rowsNumber;
             }
+
+        Semaphore lastSemaphore = new Semaphore(0, true);
+        Semaphore lastMutex = new Semaphore(1, true);
+
+        this.workers[this.workers.length - 1] = new Worker.Builder()
+                .setStartingRow(startingRow)
+                .setRowsNumber(this.previousWorld.getSize()-startingRow)
+                .setPreviousState(this.previousWorld)
+                .setCurrentState(this.currentWorld)
+                .setSemaphore(lastSemaphore)
+                .setMutex(lastMutex)
+                .build();
+        this.semaphores.add(lastSemaphore);
+        this.mutexes.add(lastMutex);
+
 
     }
 
