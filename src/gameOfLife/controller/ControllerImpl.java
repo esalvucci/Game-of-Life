@@ -8,6 +8,7 @@ import gameOfLife.view.MatrixFrame;
 
 import javax.print.attribute.standard.Chromaticity;
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -91,11 +92,8 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
                 for (Semaphore semaphore : this.semaphores) {
                     semaphore.acquire();
                 }
-                this.process(new ArrayList<>());
-            } catch (InterruptedException e) {
-                for (Semaphore mutex : this.mutexes) {
-                    mutex.release();
-                }
+                SwingUtilities.invokeAndWait(() -> this.process(new ArrayList<>()));
+            } catch (InvocationTargetException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -127,7 +125,13 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
         }
 
         this.chronometer.stop();
-        System.out.println("Time elapsed: " + this.chronometer.getTime() + "ms");
+/*
+        System.out.println(this.previousWorld.getSize() + " | " + this.getThreadsNumber()
+                + " | " + (this.getThreadsNumber() - 1) + " | " + this.chronometer.getTime() + "ms");
+*/
+
+        System.out.println(this.chronometer.getTime());
+
 
     }
 
@@ -136,10 +140,12 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
      */
     @Override
     public void startEvolution() {
+
         for(Worker worker : workers){
             worker.start();
         }
         this.execute();
+
     }
 
     /**
@@ -151,6 +157,7 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
             worker.stopEvolution();
         }
         this.changeRunningState();
+
     }
 
     /**
@@ -170,6 +177,7 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
     }
 
     private int getThreadsNumber() {
+//        return 1;
         return Runtime.getRuntime().availableProcessors() + ADDICTIONAL_THREADS;
     }
 

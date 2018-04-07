@@ -8,9 +8,9 @@ import javax.swing.*;
 
 public class MainView {
 
-    private static final int SIZE = 10;
+    private static final int SIZE = 1000;
 
-    public static void main(String[] a) {
+    public static void main(String... args) {
 
         SwingUtilities.invokeLater(() -> {
 

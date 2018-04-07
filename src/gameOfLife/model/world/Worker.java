@@ -40,10 +40,8 @@ public class Worker extends Thread {
 
             try {
                 this.mutex.acquire();
-
                 for (int i = this.startingRow; i < to; i++) {
                     for (int j = 0; j < this.currentWorld.getSize(); j++) {
-
                         if (this.isDying(i, j)) {
                             this.currentWorld.updateValueIn(i, j, false);
                         } else if (this.isLiving(i, j)) {
@@ -52,7 +50,6 @@ public class Worker extends Thread {
                     }
                 }
 
-                Thread.sleep(3000);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
