@@ -3,10 +3,9 @@ package gameOfLife.controller;
 import gameOfLife.model.chronometer.Chronometer;
 import gameOfLife.model.matrix.Matrix;
 import gameOfLife.model.matrix.MatrixImpl;
-import gameOfLife.model.world.Worker;
+import gameOfLife.model.Worker;
 import gameOfLife.view.MatrixFrame;
 
-import javax.print.attribute.standard.Chromaticity;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -20,8 +19,8 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
 
     private static final int ADDICTIONAL_THREADS = 1;
     private final Worker[] workers = new Worker[this.getThreadsNumber()];
-    private List<Semaphore> semaphores = new ArrayList<>();
-    private List<Semaphore> mutexes = new ArrayList<>();
+    private List<Semaphore> consumer = new ArrayList<>();
+    private List<Semaphore> producer = new ArrayList<>();
     private Matrix previousWorld;
     private Matrix currentWorld;
     private boolean running = true;
@@ -41,7 +40,6 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
                 .setSize(size)
                 .setEmptyMatrix()
                 .build();
-
         for (int i = 0; i < this.currentWorld.getSize(); i++) {
             for (int j = 0; j < this.currentWorld.getSize(); j++) {
                 boolean newValue = this.currentWorld.get(i, j);
@@ -60,37 +58,34 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
         int rowsNumber = this.currentWorld.getSize() / this.workers.length;
 
             for (int i = 0; i < this.workers.length-1; i++) {
-                Semaphore semaphore = new Semaphore(0, true);
-                Semaphore mutex = new Semaphore(1, true);
-
+                Semaphore consumer = new Semaphore(0, true);
+                Semaphore producer = new Semaphore(1, true);
                 this.workers[i] = new Worker.Builder()
                                         .setStartingRow(startingRow)
                                         .setRowsNumber(rowsNumber)
                                         .setPreviousState(this.previousWorld)
                                         .setCurrentState(this.currentWorld)
-                                        .setSemaphore(semaphore)
-                                        .setMutex(mutex)
+                                        .setConsumer(consumer)
+                                        .setProducer(producer)
                                         .build();
-                this.semaphores.add(semaphore);
-                this.mutexes.add(mutex);
+                this.consumer.add(consumer);
+                this.producer.add(producer);
                 startingRow = startingRow + rowsNumber;
             }
 
-        Semaphore lastSemaphore = new Semaphore(0, true);
-        Semaphore lastMutex = new Semaphore(1, true);
+        Semaphore lastConsumer = new Semaphore(0, true);
+        Semaphore lastProducer = new Semaphore(1, true);
 
         this.workers[this.workers.length - 1] = new Worker.Builder()
                 .setStartingRow(startingRow)
                 .setRowsNumber(this.previousWorld.getSize()-startingRow)
                 .setPreviousState(this.previousWorld)
                 .setCurrentState(this.currentWorld)
-                .setSemaphore(lastSemaphore)
-                .setMutex(lastMutex)
+                .setConsumer(lastConsumer)
+                .setProducer(lastProducer)
                 .build();
-        this.semaphores.add(lastSemaphore);
-        this.mutexes.add(lastMutex);
-
-
+        this.consumer.add(lastConsumer);
+        this.producer.add(lastProducer);
     }
 
     /**
@@ -111,8 +106,8 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
             try {
                 this.chronometer.start();
 
-                for (Semaphore semaphore : this.semaphores) {
-                    semaphore.acquire();
+                for (Semaphore consumer : this.consumer) {
+                    consumer.acquire();
                 }
                 SwingUtilities.invokeAndWait(() -> this.process(new ArrayList<>()));
             } catch (InvocationTargetException | InterruptedException e) {
@@ -135,10 +130,6 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
      */
     @Override
     public void endMatrixUpdate() {
-        for (Semaphore semaphore : this.mutexes) {
-            semaphore.release();
-        }
-
         for (int i = 0; i < this.currentWorld.getSize(); i++) {
             for (int j = 0; j < this.currentWorld.getSize(); j++) {
                 boolean newValue = this.currentWorld.get(i, j);
@@ -146,15 +137,12 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
             }
         }
 
+        for (Semaphore producer : this.producer) {
+            producer.release();
+        }
+
         this.chronometer.stop();
-/*
-        System.out.println(this.previousWorld.getSize() + " | " + this.getThreadsNumber()
-                + " | " + (this.getThreadsNumber() - 1) + " | " + this.chronometer.getTime() + "ms");
-*/
-
         System.out.println(this.chronometer.getTime());
-
-
     }
 
     /**
@@ -199,7 +187,6 @@ public class ControllerImpl extends SwingWorker<Void, Void> implements Controlle
     }
 
     private int getThreadsNumber() {
-//        return 1;
         return Runtime.getRuntime().availableProcessors() + ADDICTIONAL_THREADS;
     }
 

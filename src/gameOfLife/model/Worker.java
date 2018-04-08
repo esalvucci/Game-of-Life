@@ -1,4 +1,4 @@
-package gameOfLife.model.world;
+package gameOfLife.model;
 
 import gameOfLife.model.matrix.Matrix;
 
@@ -15,18 +15,18 @@ public class Worker extends Thread {
     private int rowsNumber;
     private Matrix currentWorld;
     private Matrix previousWorld;
-    private Semaphore semaphore;
-    private Semaphore mutex;
+    private Semaphore consumer;
+    private Semaphore producer;
     private boolean running = true;
 
-    private Worker(int startingRow, int rowsNumber, final Matrix previousWorld, Matrix currentWorld, Semaphore semaphore, Semaphore mutex) {
+    private Worker(int startingRow, int rowsNumber, final Matrix previousWorld, Matrix currentWorld, Semaphore consumer, Semaphore producer) {
         super();
         this.startingRow = startingRow;
         this.rowsNumber = rowsNumber;
         this.previousWorld = previousWorld;
         this.currentWorld = currentWorld;
-        this.semaphore = semaphore;
-        this.mutex = mutex;
+        this.consumer = consumer;
+        this.producer = producer;
     }
 
     /**
@@ -39,7 +39,7 @@ public class Worker extends Thread {
         while(this.isRunning()) {
 
             try {
-                this.mutex.acquire();
+                this.producer.acquire();
                 for (int i = this.startingRow; i < to; i++) {
                     for (int j = 0; j < this.currentWorld.getSize(); j++) {
                         if (this.isDying(i, j)) {
@@ -53,7 +53,7 @@ public class Worker extends Thread {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                this.semaphore.release();
+                this.consumer.release();
             }
         }
     }
@@ -109,8 +109,8 @@ public class Worker extends Thread {
         private int rowsNumber;
         private Matrix previousState;
         private Matrix currentState;
-        private Semaphore semaphore;
-        private Semaphore mutex;
+        private Semaphore consumer;
+        private Semaphore producer;
 
         public Builder() {
 
@@ -136,21 +136,21 @@ public class Worker extends Thread {
             return this;
         }
 
-        public Builder setSemaphore(Semaphore semaphore) {
-            this.semaphore = semaphore;
+        public Builder setConsumer(Semaphore consumer) {
+            this.consumer = consumer;
             return this;
         }
 
-        public Builder setMutex(Semaphore mutex) {
-            this.mutex = mutex;
+        public Builder setProducer(Semaphore producer) {
+            this.producer = producer;
             return this;
         }
 
         public Worker build() {
             if (this.startingRow != 0 || this.rowsNumber != 0 || this.previousState != null
-                    || this.currentState != null || this.semaphore != null || this.mutex != null) {
+                    || this.currentState != null || this.consumer != null || this.producer != null) {
                 return new Worker(this.startingRow, this.rowsNumber,
-                        this.previousState, this.currentState, this.semaphore,  this.mutex);
+                        this.previousState, this.currentState, this.consumer,  this.producer);
             } else {
                 throw new IllegalStateException();
             }

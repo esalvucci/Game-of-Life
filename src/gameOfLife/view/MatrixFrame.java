@@ -14,7 +14,7 @@ public class MatrixFrame extends JFrame implements MouseMotionListener {
 	private static final String START = "Start";
 	private static final String ALIVE_CELLS = " alive cells";
 	private static final String TITLE = "Game of Life";
-	private Grid canvas;
+	private MatrixPanel canvas;
 	private JScrollPane scrollPane;
 	private Controller controller;
 	private final JPanel info = new JPanel();
@@ -26,7 +26,7 @@ public class MatrixFrame extends JFrame implements MouseMotionListener {
 		super(TITLE);
         this.setSize(SIZE, SIZE);
 		this.controller = controller;
-		this.canvas = new Grid(controller);
+		this.canvas = new MatrixPanel(controller);
 		this.canvas.setPreferredSize(
 		        new Dimension(SIZE + this.canvas.getMatrixSideSize(), SIZE + this.canvas.getMatrixSideSize()));
         this.scrollPane = new JScrollPane(canvas);

@@ -9,13 +9,13 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Grid extends JPanel {
+public class MatrixPanel extends JPanel {
 
     private static final int TEN = 10;
     private Controller controller;
     private long counter;
 
-    public Grid(Controller controller) {
+    public MatrixPanel(Controller controller) {
         this.controller = controller;
     }
 
